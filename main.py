@@ -18,8 +18,8 @@ def licz_sume(skladniki):
         'knut': knuty_reszta
     }
 
-# Przykładowe dane wejściowe i testowanie funkcji
-if __name__ == "__main__":
+# Przykładowe dane wejściowe i uruchomienie
+try:
     skladniki = {
         'galeon': [1, 3, 5],
         'sykl': [18, 20, 10],
@@ -27,3 +27,6 @@ if __name__ == "__main__":
     }
     wynik = licz_sume(skladniki)
     print(f"Wynik po przeliczeniu: {wynik}")  # Powinno wypisać wynik przeliczenia
+
+except TypeError:
+    print("Błąd")
