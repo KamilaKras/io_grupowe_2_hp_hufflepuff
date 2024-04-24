@@ -13,10 +13,14 @@ def waluta_dict_na_str(waluta_dict):
 
     return waluta_str
 
-# Przykład użycia:
-bank = {
-    "galeon": 1,
-    "sykl": 2,
-    "knut": 11
-}
+# Wprowadzanie danych przez użytkownika
+bank = {}
+bank["galeon"] = int(input("Podaj ilość galeonów: "))
+bank["sykl"] = int(input("Podaj ilość syklów: "))
+bank["knut"] = int(input("Podaj ilość knutów: "))
+
 print(waluta_dict_na_str(bank))
+
+
+
+        
