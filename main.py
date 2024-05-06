@@ -122,6 +122,31 @@ bank["knut"] = int(input("Podaj ilość knutów: "))
 
 print(waluta_dict_na_str(bank))
 
+#zadanie 6
+def waluta_str_na_dict(ciag_znakow):
+    bilony = ciag_znakow.split()
+    wynik = {}
 
+    for i in range(0, len(bilony), 2):
+        wartosc = int(bilony[i])
+        rodzaj = bilony[i + 1]
+        if rodzaj.startswith("g"):
+            wynik["galeon"] = wartosc
+        elif rodzaj.startswith("s"):
+            wynik["sykl"] = wartosc
+        elif rodzaj.startswith("k"):
+            wynik["knut"] = wartosc
+    if "galeon" not in wynik:
+        wynik["galeon"] = 0
+    if "sykl" not in wynik:
+        wynik["sykl"] = 0
+    if "knut" not in wynik:
+        wynik["knut"] = 0
+
+    wynik_str = "{\n" + f"'galeon': {wynik['galeon']},\n 'sykl': {wynik['sykl']},\n 'knut': {wynik['knut']}\n" + "}"
+    return wynik_str
+
+ciag_znakow = str(input("Podaj bilony: "))
+print(waluta_str_na_dict(ciag_znakow))
 
         
