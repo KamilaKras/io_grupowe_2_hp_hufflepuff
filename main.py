@@ -1,38 +1,40 @@
 import random
 import time
+import csv
+
 
 def wybierz_sowe_zwroc_koszt(p, o, t, s):
     g = 0
     syk = 0
     k = 0
 
-    if p and s == 'wyjec':
+    if bool(p) and str(s) == 'wyjec':
         k += 14
-    elif p and s == 'list gończy':
+    elif bool(p) and str(s) == 'list gończy':
         syk += 1
         k += 7
-    elif p:
+    elif bool(p):
         k += 7
-    elif s == 'wyjec':
+    elif str(s) == 'wyjec':
         k += 7
-    elif s == 'list gończy':
+    elif str(s) == 'list gończy':
         syk += 1
 
-    if o == 'lokalna':
-        if t == 'list':
+    if str(o) == 'lokalna':
+        if str(t) == 'list':
             k += 2
-        elif t == 'paczka':
+        elif str(t) == 'paczka':
             k += 7
-    elif o == 'krajowa':
-        if t == 'list':
+    elif str(o) == 'krajowa':
+        if str(t) == 'list':
             k += 12
-        elif t == 'paczka':
+        elif str(t) == 'paczka':
             syk += 1
             k += 2
-    elif o == 'dalekobieżna':
-        if t == 'list':
+    elif str(o) == 'dalekobieżna':
+        if str(t) == 'list':
             k += 20
-        elif t == 'paczka':
+        elif str(t) == 'paczka':
             syk += 2
             k += 1
 
@@ -43,15 +45,16 @@ def wybierz_sowe_zwroc_koszt(p, o, t, s):
         syk -= 17
         g += 1
 
-    d = {'galeony': g,
-         'sykle': syk,
-         'knuty': k}
+    d = {'galeon': g,
+         'sykl': syk,
+         'knut': k}
 
     print(d)
 
+    return d
+
 
 wybierz_sowe_zwroc_koszt(True, 'dalekobieżna', 'paczka', 'list gończy')
-
 
 
 def wyslijsowe(adresat, tresc_listu):
@@ -86,6 +89,7 @@ def licz_sume(skladniki):
         'knut': knuty_reszta
     }
 
+
 # Przykładowe dane wejściowe i uruchomienie
 try:
     skladniki = {
@@ -99,8 +103,8 @@ try:
 except TypeError:
     print("Błąd")
 
-def waluta_dict_na_str(waluta_dict):
 
+def waluta_dict_na_str(waluta_dict):
     waluta_str = ""
 
     if "galeon" in waluta_dict and waluta_dict["galeon"] != 0:
@@ -114,6 +118,7 @@ def waluta_dict_na_str(waluta_dict):
 
     return waluta_str
 
+
 # Wprowadzanie danych przez użytkownika
 bank = {}
 bank["galeon"] = int(input("Podaj ilość galeonów: "))
@@ -122,7 +127,57 @@ bank["knut"] = int(input("Podaj ilość knutów: "))
 
 print(waluta_dict_na_str(bank))
 
-#zadanie 6
+
+def nadaj_sowe(a, t, potw1, odl1, typ1, sp1):
+    potw2 = False
+
+    if potw1.lower() == "tak":
+        potw2 = True
+    elif potw1.lower() == "nie":
+        potw2 = False
+
+    if odl1.lower() == "l":
+        odl1 = "lokalna"
+    elif odl1.lower() == "l":
+        odl1 = "krajowa"
+    elif odl1.lower() == "d":
+        odl1 = "dalekobieżna"
+
+    if typ1.lower() == "l":
+        typ1 = "list"
+    elif typ1.lower() == "p":
+        typ1 = "paczka"
+
+    if sp1.lower() == "z":
+        sp1 = "zwykła"
+    elif sp1.lower() == "w":
+        sp1 = "wyjec"
+    elif sp1.lower() == "l":
+        sp1 = "list gończy"
+
+    koszt = waluta_dict_na_str(wybierz_sowe_zwroc_koszt(p=potw2, o=str(odl1), t=str(typ1), s=str(sp1)))
+
+    if potw2:
+        with open('poczta_nadania_lista.csv', 'a') as plik:
+            csv_writer = csv.writer(plik)
+            csv_writer.writerow([a, t, str(koszt), "Tak"])
+    elif not potw2:
+        with open('poczta_nadania_lista.csv', 'a') as plik:
+            csv_writer = csv.writer(plik)
+            csv_writer.writerow([a, t, str(koszt), "Nie"])
+
+
+adresat = str(input("Podaj adresata: "))
+tresc = str(input("Podaj treść wiadomości: "))
+potw = input("Czy chcesz potwierdzenie odbioru? Tak/Nie: ")
+odl = str(input("Podaj odległość. L - lokalna, K - krajowa, D - dalekobieżna: "))
+typ = str(input("Podaj typ przesyłki. L - list, P - paczka: "))
+sp = str(input("Zwykła czy specjalna? Z - zwykła, W - wyjec, L - list gończy: "))
+
+nadaj_sowe(adresat, tresc, potw, odl, typ, sp)
+
+
+# zadanie 6
 def waluta_str_na_dict(ciag_znakow):
     bilony = ciag_znakow.split()
     wynik = {}
@@ -148,5 +203,3 @@ def waluta_str_na_dict(ciag_znakow):
 
 ciag_znakow = str(input("Podaj bilony: "))
 print(waluta_str_na_dict(ciag_znakow))
-
-        
