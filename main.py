@@ -2,7 +2,56 @@ import random
 import time
 import csv
 
+# zadanie 2
+def wyslijsowe(adresat, tresc_listu):
+    print(f"Wysyłanie sowy z listem do {adresat} o treści: {tresc_listu}....")
+    time.sleep(1)
+    losowanie = random.choices((True, False), weights=[0.85, 0.15])[0]
 
+    return losowanie
+
+
+# wejscie1 = input("Podaj adresata: ")
+# wejscie2 = input("Podaj treść listu: ")
+#
+# print(wyslijsowe(wejscie1, wejscie2))
+
+#zadanie 3
+def licz_sume(skladniki):
+    knuty_w_syklu = 21
+    sykle_w_galeonie = 17
+
+    # Sumowanie wartości monet
+    suma_knutow = sum(skladniki.get('knut', []))
+    suma_sykli = sum(skladniki.get('sykl', [])) + suma_knutow // knuty_w_syklu
+    suma_geleonow = sum(skladniki.get('geleon', [])) + suma_sykli // sykle_w_galeonie
+
+    # Obliczanie reszty knutów i sykli, które nie zmieściły się w wyższych nominałach
+    knuty_reszta = suma_knutow % knuty_w_syklu
+    sykle_reszta = suma_sykli % sykle_w_galeonie
+
+    # Zwracanie słownika z przeliczonymi wartościami
+    return {
+        'galeon': suma_geleonow,
+        'sykl': sykle_reszta,
+        'knut': knuty_reszta
+    }
+
+
+# # Przykładowe dane wejściowe i uruchomienie
+# try:
+#     skladniki = {
+#         'galeon': [1, 3, 5],
+#         'sykl': [18, 20, 10],
+#         'knut': [30, 40, 7]
+#     }
+#     wynik = licz_sume(skladniki)
+#     print(f"Wynik po przeliczeniu: {wynik}")  # Powinno wypisać wynik przeliczenia
+#
+# except TypeError:
+#     print("Błąd")
+
+# zadanie 4
 def wybierz_sowe_zwroc_koszt(p, o, t, s):
     g = 0
     syk = 0
@@ -54,56 +103,9 @@ def wybierz_sowe_zwroc_koszt(p, o, t, s):
     return d
 
 
-wybierz_sowe_zwroc_koszt(True, 'dalekobieżna', 'paczka', 'list gończy')
+# wybierz_sowe_zwroc_koszt(True, 'dalekobieżna', 'paczka', 'list gończy')
 
-
-def wyslijsowe(adresat, tresc_listu):
-    print(f"Wysyłanie sowy z listem do {adresat} o treści: {tresc_listu}....")
-    time.sleep(1)
-    losowanie = random.choices((True, False), weights=[0.85, 0.15])[0]
-
-    return losowanie
-
-
-wejscie1 = input("Podaj adresata: ")
-wejscie2 = input("Podaj treść listu: ")
-
-print(wyslijsowe(wejscie1, wejscie2))
-def licz_sume(skladniki):
-    knuty_w_syklu = 21
-    sykle_w_galeonie = 17
-
-    # Sumowanie wartości monet
-    suma_knutow = sum(skladniki.get('knut', []))
-    suma_sykli = sum(skladniki.get('sykl', [])) + suma_knutow // knuty_w_syklu
-    suma_geleonow = sum(skladniki.get('geleon', [])) + suma_sykli // sykle_w_galeonie
-
-    # Obliczanie reszty knutów i sykli, które nie zmieściły się w wyższych nominałach
-    knuty_reszta = suma_knutow % knuty_w_syklu
-    sykle_reszta = suma_sykli % sykle_w_galeonie
-
-    # Zwracanie słownika z przeliczonymi wartościami
-    return {
-        'galeon': suma_geleonow,
-        'sykl': sykle_reszta,
-        'knut': knuty_reszta
-    }
-
-
-# Przykładowe dane wejściowe i uruchomienie
-try:
-    skladniki = {
-        'galeon': [1, 3, 5],
-        'sykl': [18, 20, 10],
-        'knut': [30, 40, 7]
-    }
-    wynik = licz_sume(skladniki)
-    print(f"Wynik po przeliczeniu: {wynik}")  # Powinno wypisać wynik przeliczenia
-
-except TypeError:
-    print("Błąd")
-
-
+# zadanie 5
 def waluta_dict_na_str(waluta_dict):
     waluta_str = ""
 
@@ -119,15 +121,44 @@ def waluta_dict_na_str(waluta_dict):
     return waluta_str
 
 
-# Wprowadzanie danych przez użytkownika
-bank = {}
-bank["galeon"] = int(input("Podaj ilość galeonów: "))
-bank["sykl"] = int(input("Podaj ilość syklów: "))
-bank["knut"] = int(input("Podaj ilość knutów: "))
+# # Wprowadzanie danych przez użytkownika
+# bank = {}
+# bank["galeon"] = int(input("Podaj ilość galeonów: "))
+# bank["sykl"] = int(input("Podaj ilość syklów: "))
+# bank["knut"] = int(input("Podaj ilość knutów: "))
+#
+# print(waluta_dict_na_str(bank))
 
-print(waluta_dict_na_str(bank))
 
 
+# zadanie 6
+def waluta_str_na_dict(ciag_znakow):
+    bilony = ciag_znakow.split()
+    wynik = {}
+
+    for i in range(0, len(bilony), 2):
+        wartosc = int(bilony[i])
+        rodzaj = bilony[i + 1]
+        if rodzaj.startswith("g"):
+            wynik["galeon"] = wartosc
+        elif rodzaj.startswith("s"):
+            wynik["sykl"] = wartosc
+        elif rodzaj.startswith("k"):
+            wynik["knut"] = wartosc
+    if "galeon" not in wynik:
+        wynik["galeon"] = 0
+    if "sykl" not in wynik:
+        wynik["sykl"] = 0
+    if "knut" not in wynik:
+        wynik["knut"] = 0
+
+    wynik_str = "{\n" + f"'galeon': {wynik['galeon']},\n 'sykl': {wynik['sykl']},\n 'knut': {wynik['knut']}\n" + "}"
+    return wynik_str
+
+# ciag_znakow = str(input("Podaj bilony: "))
+# print(waluta_str_na_dict(ciag_znakow))
+
+# zadanie 8
 def nadaj_sowe(a, t, potw1, odl1, typ1, sp1):
     potw2 = False
 
@@ -167,39 +198,13 @@ def nadaj_sowe(a, t, potw1, odl1, typ1, sp1):
             csv_writer.writerow([a, t, str(koszt), "Nie"])
 
 
-adresat = str(input("Podaj adresata: "))
-tresc = str(input("Podaj treść wiadomości: "))
-potw = input("Czy chcesz potwierdzenie odbioru? Tak/Nie: ")
-odl = str(input("Podaj odległość. L - lokalna, K - krajowa, D - dalekobieżna: "))
-typ = str(input("Podaj typ przesyłki. L - list, P - paczka: "))
-sp = str(input("Zwykła czy specjalna? Z - zwykła, W - wyjec, L - list gończy: "))
+# adresat = str(input("Podaj adresata: "))
+# tresc = str(input("Podaj treść wiadomości: "))
+# potw = input("Czy chcesz potwierdzenie odbioru? Tak/Nie: ")
+# odl = str(input("Podaj odległość. L - lokalna, K - krajowa, D - dalekobieżna: "))
+# typ = str(input("Podaj typ przesyłki. L - list, P - paczka: "))
+# sp = str(input("Zwykła czy specjalna? Z - zwykła, W - wyjec, L - list gończy: "))
+#
+# nadaj_sowe(adresat, tresc, potw, odl, typ, sp)
 
-nadaj_sowe(adresat, tresc, potw, odl, typ, sp)
 
-
-# zadanie 6
-def waluta_str_na_dict(ciag_znakow):
-    bilony = ciag_znakow.split()
-    wynik = {}
-
-    for i in range(0, len(bilony), 2):
-        wartosc = int(bilony[i])
-        rodzaj = bilony[i + 1]
-        if rodzaj.startswith("g"):
-            wynik["galeon"] = wartosc
-        elif rodzaj.startswith("s"):
-            wynik["sykl"] = wartosc
-        elif rodzaj.startswith("k"):
-            wynik["knut"] = wartosc
-    if "galeon" not in wynik:
-        wynik["galeon"] = 0
-    if "sykl" not in wynik:
-        wynik["sykl"] = 0
-    if "knut" not in wynik:
-        wynik["knut"] = 0
-
-    wynik_str = "{\n" + f"'galeon': {wynik['galeon']},\n 'sykl': {wynik['sykl']},\n 'knut': {wynik['knut']}\n" + "}"
-    return wynik_str
-
-ciag_znakow = str(input("Podaj bilony: "))
-print(waluta_str_na_dict(ciag_znakow))
