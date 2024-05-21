@@ -24,7 +24,7 @@ def licz_sume(skladniki):
     # Sumowanie wartości monet
     suma_knutow = sum(skladniki.get('knut', []))
     suma_sykli = sum(skladniki.get('sykl', [])) + suma_knutow // knuty_w_syklu
-    suma_geleonow = sum(skladniki.get('geleon', [])) + suma_sykli // sykle_w_galeonie
+    suma_galeonow = sum(skladniki.get('galeon', [])) + suma_sykli // sykle_w_galeonie
 
     # Obliczanie reszty knutów i sykli, które nie zmieściły się w wyższych nominałach
     knuty_reszta = suma_knutow % knuty_w_syklu
@@ -32,7 +32,7 @@ def licz_sume(skladniki):
 
     # Zwracanie słownika z przeliczonymi wartościami
     return {
-        'galeon': suma_geleonow,
+        'galeon': suma_galeonow,
         'sykl': sykle_reszta,
         'knut': knuty_reszta
     }
