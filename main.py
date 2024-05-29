@@ -1,20 +1,21 @@
+import datetime
 import random
 import time
 import csv
 
 # zadanie 2
-def wyslijsowe(adresat, tresc_listu):
-    print(f"Wysyłanie sowy z listem do {adresat} o treści: {tresc_listu}....")
+def wyslij_sowe(adresat, tresc_wiadomosci):
+    print(f"Wysyłanie sowy z listem do {adresat} o treści: {tresc_wiadomosci}....")
     time.sleep(1)
-    losowanie = random.choices((True, False), weights=[0.85, 0.15])[0]
+    losowanie = random.choices((True, False), weights=[0.01, 0.99])[0]
 
     return losowanie
 
 
 # wejscie1 = input("Podaj adresata: ")
 # wejscie2 = input("Podaj treść listu: ")
-#
-# print(wyslijsowe(wejscie1, wejscie2))
+
+# print(wyslij_sowe(wejscie1, wejscie2))
 
 #zadanie 3
 def licz_sume(skladniki):
@@ -158,7 +159,7 @@ def waluta_str_na_dict(ciag_znakow):
 # ciag_znakow = str(input("Podaj bilony: "))
 # print(waluta_str_na_dict(ciag_znakow))
 
-# zadanie 8
+# zadanie 7
 def nadaj_sowe(a, t, potw1, odl1, typ1, sp1):
     potw2 = False
 
@@ -186,25 +187,77 @@ def nadaj_sowe(a, t, potw1, odl1, typ1, sp1):
     elif sp1.lower() == "l":
         sp1 = "list gończy"
 
-    koszt = waluta_dict_na_str(wybierz_sowe_zwroc_koszt(p=potw2, o=str(odl1), t=str(typ1), s=str(sp1)))
+    koszt_przesylki = waluta_dict_na_str(wybierz_sowe_zwroc_koszt(p=potw2, o=str(odl1), t=str(typ1), s=str(sp1)))
 
     if potw2:
-        with open('poczta_nadania_lista.csv', 'a') as plik:
+        with open('poczta_nadania_lista.csv',mode='a',newline='') as plik:
             csv_writer = csv.writer(plik)
-            csv_writer.writerow([a, t, str(koszt), "Tak"])
+            csv_writer.writerow([a, t, str(koszt_przesylki), "Tak"])
     elif not potw2:
-        with open('poczta_nadania_lista.csv', 'a') as plik:
+        with open('poczta_nadania_lista.csv',mode='a',newline='') as plik:
             csv_writer = csv.writer(plik)
-            csv_writer.writerow([a, t, str(koszt), "Nie"])
+            csv_writer.writerow([a, t, str(koszt_przesylki), "Nie"])
 
 
-# adresat = str(input("Podaj adresata: "))
-# tresc = str(input("Podaj treść wiadomości: "))
-# potw = input("Czy chcesz potwierdzenie odbioru? Tak/Nie: ")
-# odl = str(input("Podaj odległość. L - lokalna, K - krajowa, D - dalekobieżna: "))
-# typ = str(input("Podaj typ przesyłki. L - list, P - paczka: "))
-# sp = str(input("Zwykła czy specjalna? Z - zwykła, W - wyjec, L - list gończy: "))
-#
-# nadaj_sowe(adresat, tresc, potw, odl, typ, sp)
+adresat = str(input("Podaj adresata: "))
+tresc = str(input("Podaj treść wiadomości: "))
+potw = input("Czy chcesz potwierdzenie odbioru? Tak/Nie: ")
+odl = str(input("Podaj odległość. L - lokalna, K - krajowa, D - dalekobieżna: "))
+typ = str(input("Podaj typ przesyłki. L - list, P - paczka: "))
+sp = str(input("Zwykła czy specjalna? Z - zwykła, W - wyjec, L - list gończy: "))
 
+nadaj_sowe(adresat, tresc, potw, odl, typ, sp)
+
+
+# zadanie 8
+
+def poczta_wyslij_sowy(sciezka_do_pliku_csv):
+    dzisiaj = datetime.datetime.now().strftime("%d_%m_%Y")
+    output_file = f"output_sowy_z_poczty_{dzisiaj}.csv"
+    
+    try:
+        with open(sciezka_do_pliku_csv, mode='r', encoding='utf-8') as csvfile, \
+            open(output_file, mode='w', encoding='utf-8', newline='') as output_csvfile:
+            
+            fieldnames = ['adresat', 'tresc wiadomosci', 'koszt przesylki', 'potwierdzenie odbioru', 'rzeczywisty koszt']
+            
+            writer = csv.DictWriter(output_csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+
+            
+            reader = csv.reader(csvfile)
+            for values in reader:
+                
+                row_data = dict(zip(fieldnames, values))
+                
+                adresat = row_data.get('adresat', '').strip()
+                tresc_wiadomosci = row_data.get('tresc wiadomosci', '').strip()
+                koszt_przesylki = row_data.get('koszt przesylki', '').strip()
+                potwierdzenie_odbioru = row_data.get('potwierdzenie odbioru', '').strip()
+                
+                sowa_doleciala = wyslij_sowe(adresat, tresc_wiadomosci)
+                print(f"Wartość zwrócona przez funkcję wyslij_sowe: {sowa_doleciala}")
+                
+                if sowa_doleciala:
+                    rzeczywisty_koszt = koszt_przesylki
+                else:
+                    if potwierdzenie_odbioru == 'Tak':
+                        rzeczywisty_koszt = 0.0
+                    else:
+                        rzeczywisty_koszt = koszt_przesylki
+                
+                writer.writerow({
+                    'adresat': adresat,
+                    'tresc wiadomosci': tresc_wiadomosci,
+                    'koszt przesylki': koszt_przesylki,
+                    'potwierdzenie odbioru': potwierdzenie_odbioru.upper(),
+                    'rzeczywisty koszt': rzeczywisty_koszt
+                })
+        
+        print(f"Wyniki zapisano w pliku: {output_file}")
+    except Exception as e:
+        print(f"Wystąpił błąd podczas przetwarzania danych: {e}")
+
+# Przykładowe wywołanie funkcji
+poczta_wyslij_sowy('poczta_nadania_lista.csv')
 
