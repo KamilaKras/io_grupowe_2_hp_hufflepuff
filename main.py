@@ -7,7 +7,7 @@ import csv
 def wyslij_sowe(adresat, tresc_wiadomosci):
     print(f"Wysyłanie sowy z listem do {adresat} o treści: {tresc_wiadomosci}....")
     time.sleep(1)
-    losowanie = random.choices((True, False), weights=[0.01, 0.99])[0]
+    losowanie = random.choices((True, False), weights=[0.85, 0.15])[0]
 
     return losowanie
 
